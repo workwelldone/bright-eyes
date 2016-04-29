@@ -15,8 +15,10 @@ import java.util.Scanner;
 
 class ParanoidAndroid {
 
-    public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+    @SuppressWarnings("unused")
+	public static void main(String args[]) {
+        @SuppressWarnings("resource") // Due to infinite loop specifications
+		Scanner in = new Scanner(System.in);
         int nbFloors = in.nextInt(); // number of floors
         int width = in.nextInt(); // width of the area
         int nbRounds = in.nextInt(); // maximum number of rounds

@@ -37,6 +37,7 @@ class Player {
                 }
             }
         }
+        in.close();
     }
     
     /** Returns the X coordinate of the next node to the right, if any.  Returns -1 if none.  */

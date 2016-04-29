@@ -15,10 +15,12 @@ import java.util.Scanner;
 class HeatDetector {
 
     public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource") // Due to infinite loop specifications.
+		Scanner in = new Scanner(System.in);
         int W = in.nextInt(); // width of the building.
         int H = in.nextInt(); // height of the building.
-        int N = in.nextInt(); // maximum number of turns before game over.
+        @SuppressWarnings("unused")
+		int N = in.nextInt(); // maximum number of turns before game over.
         int x = in.nextInt();
         int y = in.nextInt();
 

@@ -23,8 +23,10 @@ class Skynet {
     private static Map<Integer, Set<Integer>> nC = new HashMap<>();  // Map of node connections
 
     public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
-        int N = in.nextInt(); // the total number of nodes in the level, including the gateways
+        @SuppressWarnings("resource") // Due to infinite loop specifications
+		Scanner in = new Scanner(System.in);
+        @SuppressWarnings("unused")
+		int N = in.nextInt(); // the total number of nodes in the level, including the gateways
         int L = in.nextInt(); // the number of links
         int E = in.nextInt(); // the number of exit gateways
         

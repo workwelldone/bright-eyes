@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Design Plan Block Drop</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Drop The Block Design</h1>
+		<h2>Main Game Loop</h2>
+		<ol>
+			<li>Read the input data</li>
+			<li>Find the column with the greatest possible return by scoring every possible option,<br>
+			with the ability to restrict the scope if needed.</li>
+			<li>Drop the block in the highest scoring column.</li>
+		</ol>
+		<p>I played with many ideas to make the largest groups and largest chains.  This will take them all into account.  I might as well use the power of the computer!  The decision must be made under 100 ms.  I can reduce the number of blocks to consider to speed up the process as necessary.</p>
+		<h2>Design</h2>
+		<h3>Find the highest scoring column</h3>
+		<div class="caption">
+			Consider every possible option, with the option to limit the scope.
+		</div>
+			<p>Get score totals for each column of the groups and chains of the current grid.  The List index corresponds to the column.  Use: <span class="method_call">List getScoreByColumn(char[][] grid, int colorIndex)</span></li>
+			</p>
+
+		<div class="method_definition">
+			<h4>List getScoreByColumn(char[][] grid, int colorIndex)</h4>
+			<div class="caption">
+				Returns a List of scores for each column based on the result of dropping the specified pair of colored blocks in that column.
+			</div>
+			<ol>
+				<li>Create a List to hold the high scores by column.</li>
+				<li>Create an adjustment variable <span class="method_call">COLOR_PAIRS_TO_CONSIDER</span></li>
+				<li>Loop through each column to determine a score for its best case scenario.</li>
+					<div class="loop">
+						<ul class="list_no_bullets">
+							<li>Make a temp copy of the original grid.</li>	
+							<li>Drop first color pair into the column by calling <span class="method_call">int dropPairIntoColumn(char[][] gridCopy, int column, int colorA, int colorB)</span></li>
+							<li>IF pair dropped successfully</li>
+							<div class="condition">
+								<ul class="list_no_bullets">
+									<li>Determine the immediate score by calling <span class="method_call">int scoreDrop(char[][] gridCopy, int column, int row)</span></li>
+									<li>Cascade through all possibilities of future block drops and get highest score possible by calling <span class="method_call">int getBestScenarioScore(	char[][] grid, int colorPairID</span></li>
+									<li>Assign score to list at proper index.</li>
+								</ul>
+							</div>
+							<li>ELSE assign negative one.</li>
+						</ul>
+					</div>
+			</ol>
+		</div>
+		<div class="method_definition">
+			<h4>int dropPairIntoColumn(char[][] grid, int column, int colorA, int colorB)</h4>
+			<div class="caption">Attempts to drop the specified color pair (colorA above colorB) into the specified column, updates the grid, and returns the int value of the row where the pair landed.  If the drop was unsuccessful, -1 is returned.
+			</div>
+		</div>
+		<div class="method_definition">
+			<h4>int scoreDrop(char[][] grid, int column, int row)</h4>
+			<div class="caption">Determines groups and chains.  Removes the groups, chains, and adjacent skulls.  Returns the count of blocks removed.</div>
+		</div>
+		<div class="method_definition">
+			<h4>int scoreBestScenario(char[][] grid, int colorPairID)</h4>
+			<div class="caption">Recursively cascades through all possibilities and returns the highest score possible to achieve.  This method references the class static variable COLOR_PAIRS_TO_CONSIDER to know when to stop.</div>
+			<ol>
+				<li>Make a temporary high score variable.</li>
+				<li>Loop through all columns.</li>
+				<div class="loop">
+					<ul class="list_no_bullets">
+						<li>Make a copy of the grid</li>
+						<li>Add Color Pair: <span class="method_call">int dropPairIntoColumn(char[][] gridCopy, int column, int colorA, int colorB)</span></li>
+						<li>IF pair dropped successfuly</li>
+						<div class="condition">
+							<ul class="list_no_bullets">
+								<li>Make a variable to hold score from <span class="method_call">int ScoreDrop(char[][] gridCopy, int column, int row)</span></li>
+								<li>IF (colorPairIndex + 1 < COLOR_PAIRS_TO_CONSIDER)</li>
+								<div class="condition">
+									Take the score variable and add the result from <span class="method_call">int scoreBestScenario(char[][] grid, int colorPairID)</span>
+								</div>
+							</ul>
+						</div>
+						
+					</ul>
+				</div>
+			</ol>
+		</div>
+
+
+		<!--
+
+
+ii.	Make a method int getBestScenarioScore(char[][] grid, int ColorPairID)
+1.	Make a temporary high score variable.
+2.	Make a loop through all the columns
+a.	Make a copy of the grid
+b.	Make a variable to store the current grid score if the specified column gets the pair by calling getCurrentGridScore(char[][] gridCopy, int column, int colorPairID).
+c.	If there is another color pair, call getBestScenarioScore() and add it to the current level score
+d.	If the score is higher than the temp high score, set the temp high score to the score.
+3.	Return the temp high score. -->
+
+	</div>
+
+</body>
+</html>

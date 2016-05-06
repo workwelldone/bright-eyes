@@ -5,12 +5,13 @@
 !.gitignore
 !*.java
 !*.md
+!*.html
 
 # ...even if they are in subdirectories
 # I don't understand why this is exactly, but found on http://stackoverflow.com/questions/987142/make-gitignore-ignore-everything-except-a-few-files?rq=1
-
 !*/
 
+# Exclude these for now
 bin/
 src/easy_challenges/
 src/quick_challenges/

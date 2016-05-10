@@ -1,0 +1,52 @@
+body {
+	font-family: "Open Sans";	
+}
+
+h1, h2, h3, .caption {
+	color: #667DFF;
+}
+
+h1, h3, h4 {
+	font-weight: 800;
+}
+
+h2, h3 {
+	font-weight: 400;
+}
+
+.caption {
+	margin-bottom: 10px;
+	font-style: italic;
+}
+
+.method_call {
+	border: solid #AAAAAA 1px;
+	background-color: #91B9E8;
+	color: #FFFFFF;
+}
+
+.method_definition {
+	margin-top: 20px;
+	border:solid #AAAAAA 1px;
+	background-color: #EEEEEE;
+	color: #090909;
+}
+
+.loop {
+	border-left: solid #91B9E8 6px;
+}
+
+.condition {
+	border-left: solid #9FECFF 6px;
+}
+
+.list_no_bullets {
+	list-style: none;
+	padding-left: 20px;
+}
+
+.footer, h2 {
+	border-top: solid 1px black;
+	margin-top: 30px;
+	padding-top: 10px;
+}

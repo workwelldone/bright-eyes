@@ -16,3 +16,7 @@ bin/
 src/easy_challenges/
 src/quick_challenges/
 src/unit_tests/
+.metadata
+.settings
+RemoteSystemsTempFiles
+.DS_Store

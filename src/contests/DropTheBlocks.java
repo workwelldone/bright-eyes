@@ -3,14 +3,61 @@ package contests;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class DropTheBlocks {
 	
-	public static final int W = 6;
-	public static final int H = 12;
-	public static final int COLOR_PAIRS_TO_CONSIDER = 1;
+	public static final int C = 6;   // Number of Columns in Grid
+	public static final int R = 12;  // Number of Rows in Grid
+	public static final int ADDITIONAL_COLOR_PAIRS_TO_CONSIDER = 1;  // Number of color pairs to evaluate beyond first pair.
 	
 	public static void main (String...args) {
+	    @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
+
+        // game loop
+        while (true) {
+            
+            // Upcoming Blocks
+            int[] colorA = new int[8];
+            int[] colorB = new int[8];
+            for (int i = 0; i < 8; i++) {
+                colorA[i] = in.nextInt(); // color of the first block
+                colorB[i] = in.nextInt(); // color of the attached block
+            }
+            
+            // Read My Grid
+            char[][] grid = new char[C][R];
+            
+            for (int row = 0; row < R; row++) {
+                String mapLine = in.next();
+                for (int col = 0; col < C; col++) {
+                    grid[col][row] = mapLine.charAt(col);  // One line of the map ('.' = empty, '0' = skull block, '1' to '5' = colored block)
+                }
+            }
+            
+            // Read Opponents Grid
+            for (int row = 0; row < R; row++) {
+                @SuppressWarnings("unused")
+				String mapLine = in.next(); 
+            }
+  
+            // Determine which column to drop the block
+            int[] columnScores = getScoreByColumn(grid, colorA, colorB, ADDITIONAL_COLOR_PAIRS_TO_CONSIDER);
+            
+            // For now just choose the first column with the highest score.
+            int highest = 0;
+            int columnToChoose = 0;
+            for (int i = 0; i < C; i++) {
+            	if (columnScores[i] > highest) {
+            		highest = columnScores[i];
+            		columnToChoose = i;
+            	}
+            }
+ 
+            System.out.println(columnToChoose);
+  
+        }
 	}
 	
 	
@@ -26,10 +73,10 @@ public class DropTheBlocks {
 	 */
 	public static int[] getScoreByColumn(char[][] grid, int[] colorA, int[] colorB, int max) {
 		
-		int[] score = new int[W];
+		int[] score = new int[C];
 		
-		for (int col = 0; col < W ; col++) {
-			char[][] temp = new char[W][H];
+		for (int col = 0; col < C ; col++) {
+			char[][] temp = new char[C][R];
 			cloneDoubleArray(temp, grid);
 			int rowPosition = dropPairIntoColumn(temp, col, colorA[0], colorB[0]);
 			if (rowPosition == -1) {
@@ -59,8 +106,8 @@ public class DropTheBlocks {
 	public static int scoreBestScenario(char[][] grid, int[] colorA, int[] colorB, int colorIndex, int max) {
 		if (max == 0) return 0;
 		int tempHigh = 0;
-		for (int col = 0; col < W; col ++) {
-			char[][] temp = new char[W][H];
+		for (int col = 0; col < C; col ++) {
+			char[][] temp = new char[C][R];
 			cloneDoubleArray(temp, grid);
 			int rowPosition = dropPairIntoColumn(temp, col, colorA[colorIndex], colorB[colorIndex]);
 			int tempScore = 0;
@@ -88,7 +135,7 @@ public class DropTheBlocks {
 	 */
 	public static int dropPairIntoColumn(char[][] grid, int column, int colorA, int colorB) {
 		// Place ColorB in first spot from bottom not filled, and ColorA on top of it.
-		for (int row = H - 1; row > 1; row--) {
+		for (int row = R - 1; row > 1; row--) {
 			if (grid[column][row] == '.') {
 				grid[column][row] = Character.forDigit(colorB,  10);
 				grid[column][row - 1] = Character.forDigit(colorA, 10);
@@ -139,10 +186,10 @@ public class DropTheBlocks {
 			// Check for new groups in each changed column
 			for (int x = 0; x < columnsToCheck.size(); x++) {
 				int col = columnsToCheck.get(x);
-				for (int row = H - 1; row >= 0; row--) {
+				for (int row = R - 1; row >= 0; row--) {
 					if (grid[col][row] == '.') break; // As soon as hitting a blank, no need to go higher.
 					
-					char[][] temp = new char[W][H];
+					char[][] temp = new char[C][R];
 					cloneDoubleArray(temp, grid);
 					
 					BlocksAndSkulls tempCount = new BlocksAndSkulls();
@@ -176,7 +223,7 @@ public class DropTheBlocks {
 		
 		BlocksAndSkulls bsCountA = new BlocksAndSkulls();
 		BlocksAndSkulls bsCountB = new BlocksAndSkulls();
-		char[][] copyA = new char[W][H];
+		char[][] copyA = new char[C][R];
 		cloneDoubleArray(copyA, grid);
 		
 		findGroup(copyA, column, row, grid[column][row], bsCountA);
@@ -191,7 +238,7 @@ public class DropTheBlocks {
 		if (grid[column][row + 1] != grid[column][row]) {
 			
 			// Work with a copy in case I need to erase marks made to find a group, but the group wasn't big enough to keep.
-			char[][] copyB = new char[W][H];
+			char[][] copyB = new char[C][R];
 			cloneDoubleArray(copyB, copyA);
 			
 			findGroup(copyB, column, row + 1, grid[column][row + 1], bsCountB);
@@ -245,12 +292,12 @@ public class DropTheBlocks {
 	 */
 	public static List<Integer> deleteBlocksFromGrid(char[][] grid) {
 		
-		char[][] instructions = new char[W][H];
+		char[][] instructions = new char[C][R];
 		cloneDoubleArray(instructions, grid);
 		
 		List<Integer> columnsToCheck = new ArrayList<>();
 		
-		for (int x = 0; x < W; x++) {
+		for (int x = 0; x < C; x++) {
 			
 			// Add non-deleted color blocks to new column temp constructor list.
 			List<Character> newCol = new ArrayList<Character>();
@@ -258,7 +305,7 @@ public class DropTheBlocks {
 			int blocksDeletedInColumn = 0;
 			
 			// Start at the bottom of each column and work up
-			for (int y = H - 1; y >= 0; y--) {
+			for (int y = R - 1; y >= 0; y--) {
 				
 				if (instructions[x][y] == '.') break;
 				if (instructions[x][y] != 'G' && instructions[x][y] != 'S') {
@@ -269,7 +316,7 @@ public class DropTheBlocks {
 			}
 						
 			// Assemble new column
-			int y = H - 1;
+			int y = R - 1;
 			for (char c: newCol) {
 				grid[x][y--] = c;
 			}
@@ -308,9 +355,9 @@ public class DropTheBlocks {
 			count.addBlocks(1);
 			
 			// Look around for more like colors or adjacent skulls.
-			if (x < W - 1) findGroup(grid, x + 1, y, groupColor, count);
+			if (x < C - 1) findGroup(grid, x + 1, y, groupColor, count);
 			if (x > 0)     findGroup(grid, x - 1, y, groupColor, count);
-			if (y < H - 1) findGroup(grid, x, y + 1, groupColor, count);
+			if (y < R - 1) findGroup(grid, x, y + 1, groupColor, count);
 			if (y > 0)     findGroup(grid, x, y - 1, groupColor, count);
 		}
 		

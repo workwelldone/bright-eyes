@@ -4,6 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/** 
+ *  The objective is to write a program that can predict the route Indiana Jones will take down a tunnel.  There are
+ *  12 different block types that make up the tunnel, each with different entry and exit possibilities.  The full details are available
+ *  at www.codingame.com.
+ *  
+ * @author darrenpearson
+ *
+ */
+
 class IndyEscape {
 
     public static void main(String args[]) {

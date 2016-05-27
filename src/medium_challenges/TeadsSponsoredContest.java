@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-class TeadsSponsoredContest {
+public class TeadsSponsoredContest {
 
     public static void main(String args[]) {
         Map<Integer, List<Integer>> relations = readMap();
@@ -20,7 +20,7 @@ class TeadsSponsoredContest {
 	 * @param relations map of person to their contacts
 	 * @return the minimum number of steps required
 	 */
-	static int findMinSteps(Map<Integer, List<Integer>> relations) {
+	public static int findMinSteps(Map<Integer, List<Integer>> relations) {
 		// Determine the minimal amount of steps required to completely propogate the advertisement
         int minSteps = Integer.MAX_VALUE;
 
@@ -53,7 +53,7 @@ class TeadsSponsoredContest {
 	 * 
 	 * @return map of persons to their contacts
 	 */
-	static Map<Integer, List<Integer>> readMap() {
+	public static Map<Integer, List<Integer>> readMap() {
 		@SuppressWarnings("resource")
 		Scanner in = new Scanner(System.in);
         int n = in.nextInt(); // the number of adjacency relations

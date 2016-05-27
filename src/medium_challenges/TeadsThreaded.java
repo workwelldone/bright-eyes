@@ -12,8 +12,8 @@ import java.util.*;
  * the brute force search.  The brute force attempt works well for under 20000 nodes, however it did not
  * work within the prescribed time limits for the problem sets involving 30-50k nodes.
  * 
- * This multi-threaded approach did not adequately solve the problem.
- * However, it did execute as intended and was a good learning experience.
+ * Although this multi-threaded approach did not adequately solve the problem for large problems sets,
+ * it did execute as intended and was a good learning experience.
  * 
  * After trying several approaches to fully solving this problem for large problem sets,
  * I will put it on the shelf for a little while I keep learning.
@@ -162,7 +162,7 @@ class TeadsThreaded {
 
     	boolean oneConnection = true;
     	int branchCountHolder = 0;
-        for (int i= 0; i < contacts.size(); i++) { 	// go through each possible contact
+        for (int i = 0, cSize = contacts.size(); i < cSize; i++) { 	// go through each possible contact
             if (contacts.get(i) != linkedFrom) { 	// ignore if it was the person who just led here
                 if (oneConnection) {				// for the first connection keep the count branch that led here, increase by one count, and keep looking for more contacts
                 	oneConnection = false;

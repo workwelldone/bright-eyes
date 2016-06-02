@@ -6,4 +6,4 @@
 
 Out of respect to those who developed <https://www.codingame.com>, this repository is limited to the purpose of sharing examples of work with potential employers.
 
-My personal profile is: <https://www.codingame.com/profile/2001adca6aa6dfd20efd504a22f43ca16307331>.
+The current ranking is Grand Master.  My personal profile is: <https://www.codingame.com/profile/2001adca6aa6dfd20efd504a22f43ca16307331>.

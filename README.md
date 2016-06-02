@@ -1,6 +1,6 @@
 
 # bright-eyes
-*Solving coding puzzles from codingame.com*
+*Original solutions to coding problems found on codingame.com*
 
 <img src="https://www.dropbox.com/s/rxlyyu3xfyx3uv8/Faith.png?raw=1" alt="Bright Eyes" width="200"/>
 

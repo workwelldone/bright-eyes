@@ -6,48 +6,120 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class TeadsSponsoredContest {
+/** 
+ * This is a non-brute force approach to solving the Teads Challenge at codingame.com.
+ * 
+ * This finds the longest path that exists in the connected network.
+ * The minimum time to navigate through the network will be the number of nodes in the
+ * longest path divided by two, after subtracting the center starting node.
+ * 
+ * To find the longest path:
+ * 1.  Map each node to its connected nodes.
+ * 2.  Map each node to a count value, starting with one for itself.  The count value
+ *     will be used to record the maximum branch size behind the node as it goes up the tree.
+ * 3.  Make a pass through the map to find every node which is connected to one or more end of
+ *     line nodes (nodes with only one connection) AND has exactly one connection that is NOT
+ *     currently an end of line node.  Consider the branch counts of each of the end of line nodes and
+ *     only add the greatest to the center node to make a new total.
+ * 4.  Eliminate the end of line nodes, and update the new connection map.
+ * 5.  Repeat step 3 and 4 until there is only one center node with connections, or there are just two nodes remaining.
+ * 6.  If the number of connection nodes is greater than two, add the two greatest counts plus 1 to find the length of the longest path.
+ * 7.  If only two nodes remain, just add the sum of their counts.
+ * 8.  Special cases would be zero or one nodes, which would require zero time.
+ * 
+ * @author darrenpearson
+ *
+ */
+
+class Solution {
 
     public static void main(String args[]) {
-        Map<Integer, List<Integer>> relations = readMap();
-        int minSteps = findMinSteps(relations);
-        System.out.println(minSteps);
-    }
 
-    
-	/**
-	 * Finds the minimal steps required to disseminate through the people's contacts
-	 * @param relations map of person to their contacts
-	 * @return the minimum number of steps required
-	 */
-	public static int findMinSteps(Map<Integer, List<Integer>> relations) {
-		// Determine the minimal amount of steps required to completely propogate the advertisement
-        int minSteps = Integer.MAX_VALUE;
-
-        // Try a brute force method of testing each person
-        for (int i : relations.keySet()) {
-            if (relations.keySet().size() > 20000 && relations.get(i).size() > 3 || relations.keySet().size() < 20000 && relations.get(i).size() > 1) {
-                List<Integer> count = new ArrayList<>(); // saves the step of each branch
-                count.add(0);
-                int countIndex = 0; // the index of each branch count
-                int linkedFrom = -1; // the previous person in the chain. `-1` indicates this person is the starting point.
-    
-                findSteps(relations, i, linkedFrom, count, countIndex);
-                
-                // Find most steps
-                int max = 0;
-                for (int j : count) {
-                    if (j > max) max = j;
-                }
-                
-                // Save the lowest max
-                if (max < minSteps) minSteps = max;
-            }
+        // Read and Create Map of Relations
+    	Map<Integer, List<Integer>> relations = readMap();
+        
+        // This map contains the maximum branch saize behind this node.
+        // One is default because it counts itself.
+        Map<Integer, Integer> count = new HashMap<>();
+        for (Integer i: relations.keySet()) {
+            count.put(i,1);
         }
-		return minSteps;
-	}
-	
 
+        boolean finished = false;
+        
+        while (!finished) {
+        	
+        	/* Make a pass through the entire graph to evaluate and combine each end of line node
+        	 * connected to a node which is connected to exactly one non-end of line node. */
+        	
+        	List<Integer> nodesToRemove = new ArrayList<>();
+        	
+        	search: for (Integer i: relations.keySet()) {
+        	            
+		        		if (relations.get(i).size() == 1) continue search;
+		        		
+		        		// Stop search if there is only one center node remaining
+		        		if (relations.get(i).size() == relations.size() - 1) {
+		        		    finished = true;
+		        		    break search;
+		        		}
+		        		
+		        		// Collect end of line nodes and find if only one middle connection exists.
+			        	List<Integer> endOfLineNodes = new ArrayList<>();
+			        	int middleNodeCount = 0;
+			        	for (Integer j : relations.get(i)) {
+			        		if (relations.get(j).size() == 1) {
+			        			endOfLineNodes.add(j);
+			        		} else {
+			        			middleNodeCount++;
+			        			if (middleNodeCount > 1) {
+			        			continue search;
+			        		    }
+			        		}
+			        	}
+			        	if (middleNodeCount != 1) continue search;
+
+			        	// Find the largest end of line and adjust the new total on the center node
+			        	int largest = 0;
+			        	for (Integer j : endOfLineNodes) {
+			        		if (count.get(j) > largest) largest = count.get(j);
+			        		count.remove(j);
+			        		nodesToRemove.add(j);
+			        		relations.get(i).remove(j);
+			        	}
+			        	
+			        	// Update center node count
+			        	count.put(i, count.get(i) + largest);
+        	}
+        	
+        	// Remove nodes that have been combined
+        	for (Integer i: nodesToRemove) {
+        	    relations.remove(i);
+        	}
+    	}
+    	
+    	if (relations.size() == 1) System.out.println(count.values()
+    	                                                   .stream()
+    	                                                   .mapToInt(a -> a)
+    	                                                   .sum());
+    	else {
+            // sum the largest two connecting nodes, add one, divide by two, floor.    
+            int largest = 0;
+            int secondLargest = 0;
+            for (int i: relations.keySet()) {
+                if (count.get(i) > largest) {
+                    secondLargest = largest;
+                    largest = count.get(i);
+                } else {
+                    if (count.get(i) > secondLargest) {
+                        secondLargest = count.get(i);
+                    }
+                }
+            }
+            System.out.println((int)Math.floor((largest + secondLargest + 1) / 2));
+    	}
+    }
+    
 	/**
 	 * Reads and returns map of all persons to their contacts.
 	 * 
@@ -84,40 +156,5 @@ public class TeadsSponsoredContest {
         }
 		return relations;
 	}
-    
-	/**
-	 * A recursive method to determine the number of steps it takes to reach all persons.  The count of all possible branches
-	 * is contained in the count parameter list.
-	 * 
-	 * @param relations the map of all people to a list of their contacts in all directions.
-	 * @param person the current person to determine further contacts.
-	 * @param linkedFrom the person who referenced this contact, or -1 if the first person to consider
-	 * @param count An Integer List containing the count of each branch followed to the end.
-	 * @param countIndex The index of the count integer List following this branch in the recursive operations.
-	 */
-    public static void findSteps(Map<Integer, List<Integer>> relations, int person, int linkedFrom, List<Integer> count, int countIndex) {
-        //System.out.printf("Relations: %s -- person: %d -- linkedFrom: %d -- countList: %s -- countIndex: %d%n", relations, person, linkedFrom, count, countIndex);
-        
-        List<Integer> contacts = relations.get(person); // all contacts of a person
-
-    	boolean oneConnection = true;
-    	int branchCountHolder = 0;
-        for (int i= 0; i < contacts.size(); i++) { 	// go through each possible contact
-            if (contacts.get(i) != linkedFrom) { 	// ignore if it was the person who just led here
-                if (oneConnection) {				// for the first connection keep the count branch that led here, increase by one count, and keep looking for more contacts
-                	oneConnection = false;
-                	branchCountHolder = count.get(countIndex);
-                	count.set(countIndex, count.get(countIndex) + 1);
-                	findSteps(relations, contacts.get(i), person, count, countIndex);
-                } else {							// for further connections, make a clone of the count branch that led here, increase by one count, and keep looking for more contacts.
-                	count.add(branchCountHolder + 1); // clone a new branch count if needed.  If search started in the middle, the new branches should have a fresh start count.
-                	findSteps(relations, contacts.get(i), person, count, count.size() - 1);                  
-                }
-            }
-        }
-        
-    }
-    
 }
     
-

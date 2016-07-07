@@ -10,12 +10,13 @@ import java.math.*;
 
 class CoderStrikeBack {
 
-    static final int GAME_LAPS = 3;
+	static final int GAME_LAPS = 3;
     static final int CHECK_POINTS = 3;
     
     // Used to determine whether or not to use the final stretch for the boost.
-    static final double FINISH_THRESHOLD = 0.50;
+    static final double FINISH_THRESHOLD = 0.30;
     static final int BOOST_MAX_ANGLE = 20;
+    static final int DISTANCE_TO_DECELERATE = 100;
 
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
@@ -90,7 +91,7 @@ class CoderStrikeBack {
                 lastY = nextCheckpointY;
             }
 
-            if (nextCheckpointAngle > 90 || nextCheckpointAngle < -90) speed = 0;
+            if (nextCheckpointAngle > 90 || nextCheckpointAngle < -90 || nextCheckpointDist < DISTANCE_TO_DECELERATE) speed = 0;
             else speed = 100;
             
             System.out.println(nextCheckpointX + " " + nextCheckpointY + " " + ((thrust && (Math.abs(nextCheckpointAngle) < BOOST_MAX_ANGLE)) ? "BOOST" : speed));

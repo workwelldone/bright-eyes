@@ -6,7 +6,8 @@ import java.util.stream.*;
 class ConwaySequence {
 
     public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
         int R = in.nextInt();
         int L = in.nextInt();
 

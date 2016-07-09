@@ -31,7 +31,7 @@ import java.util.Scanner;
  *
  */
 
-class Solution {
+class TeadsSponsoredContest {
 
     public static void main(String args[]) {
 

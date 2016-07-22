@@ -3,10 +3,7 @@ package contests;
 /** AI bot programming on www.codingame.com
  * Takes into consideration thrust, direction, and when to use a single boost.
  * */
-
-import java.util.*;
-import java.io.*;
-import java.math.*;
+import java.util.Scanner;
 
 class CoderStrikeBack {
 
@@ -19,7 +16,8 @@ class CoderStrikeBack {
     static final int DISTANCE_TO_DECELERATE = 100;
 
     public static void main(String args[]) {
-        Scanner in = new Scanner(System.in);
+        @SuppressWarnings("resource")
+		Scanner in = new Scanner(System.in);
 
         // Variables used to determine at which point to use a single boost
         boolean beginningLap = true;
@@ -50,8 +48,10 @@ class CoderStrikeBack {
             int nextCheckpointY = in.nextInt(); // y position of the next check point
             int nextCheckpointDist = in.nextInt(); // distance to the next checkpoint
             int nextCheckpointAngle = in.nextInt(); // angle between your pod orientation and the direction of the next checkpoint
-            int opponentX = in.nextInt();
-            int opponentY = in.nextInt();
+            @SuppressWarnings("unused")
+			int opponentX = in.nextInt();
+            @SuppressWarnings("unused")
+			int opponentY = in.nextInt();
             
             // Perform when checkpoint is passed
             if (nextCheckpointX != lastX && nextCheckpointY != lastY) {
